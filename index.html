@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 | For Alfiya</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #fdf5e6;
+            --card: rgba(255, 255, 255, 0.9);
+            --text: #2b2626;
+            --accent: #d4af37;
+            --rose: #e2b4bd;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0a0a0a;
+                --card: rgba(30, 30, 30, 0.9);
+                --text: #fdf5e6;
+                --accent: #ffcc33;
+                --rose: #ff85a2;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Montserrat', sans-serif; overflow-x: hidden; transition: background 0.8s ease; }
+
+        /* --- THE GATE --- */
+        #countdown-stage { 
+            position: fixed; inset: 0; 
+            background: var(--bg); 
+            z-index: 2000; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            text-align: center; 
+            transition: 1.2s cubic-bezier(0.7, 0, 0.3, 1); 
+        }
+
+        #timer-display { 
+            font-family: 'Cinzel', serif; 
+            font-size: clamp(2.5rem, 12vw, 7rem); 
+            color: var(--accent); 
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+
+        .status-msg {
+            letter-spacing: 5px; 
+            color: var(--rose); 
+            font-size: 0.75rem; 
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* --- CONTENT --- */
+        .section { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 24px; text-align: center; }
+        .glass-card { background: var(--card); backdrop-filter: blur(10px); padding: clamp(25px, 5vw, 45px); border-radius: 20px; border: 1px solid var(--rose); max-width: 600px; width: 100%; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .mallu-msg { font-family: 'Noto Sans Malayalam'; font-size: clamp(1.4rem, 6vw, 2rem); color: var(--accent); margin: 25px 0; line-height: 1.4; }
+
+        /* --- BUTTONS --- */
+        .btn { background: var(--rose); color: white; border: none; padding: 18px 36px; border-radius: 50px; cursor: pointer; font-weight: 600; font-family: 'Montserrat'; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .btn:hover { transform: scale(1.05); }
+        .btn-gold { background: var(--accent); width: 100%; margin-top: 20px; font-family: 'Cinzel'; letter-spacing: 3px; }
+
+        textarea { width: 100%; height: 160px; background: transparent; color: var(--text); border: 1px solid var(--rose); padding: 15px; border-radius: 12px; font-family: 'Montserrat'; font-size: 1rem; margin-bottom: 10px; }
+        
+        #heart-form-section { opacity: 0.2; pointer-events: none; transition: 1s; }
+        .unlocked { opacity: 1 !important; pointer-events: auto !important; }
+
+        canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1500; }
+    </style>
+</head>
+<body>
+
+    <audio id="player" preload="auto"></audio>
+
+    <div id="countdown-stage">
+        <p class="status-msg" id="sub-text">Prepare your heart</p>
+        <h1 id="timer-display">LETS BEGIN!</h1>
+        <button id="start-btn" class="btn" onclick="initExperience()">Enter Our 2026</button>
+    </div>
+
+    <canvas id="fireworks"></canvas>
+
+    <div id="main-content" style="display:none; flex-direction: column;">
+        <section class="section">
+            <h1 style="font-family: 'Birthstone'; font-size: clamp(4rem, 15vw, 7rem); color: var(--rose);">For Alfiya</h1>
+            <div class="glass-card">
+                <p>Happy New Year, Alfiya. Every second with you is a gift. I'm missig you a lot. all the silence, misunderstanding, etc. cant stop us. This is for you. Lets keep this real, and achieve the best together. ❤️🫂</p>
+                <p class="mallu-msg">നീയെന്നും എന്റെ പ്രിയപ്പെട്ടവൾ ❤️</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="glass-card">
+                <h2 style="font-family: 'Cinzel'; margin-bottom: 25px;">The Pookie Test</h2>
+                <p style="margin-bottom: 25px;">Who makes my world complete?</p>
+                <button class="btn" style="margin: 5px;" onclick="alert('Think again! ❤️')">The Stars</button>
+                <button class="btn" style="margin: 5px;" onclick="unlockHeart()">Only Alfiya</button>
+            </div>
+        </section>
+
+        <section class="section" id="heart-form-section">
+            <div class="glass-card">
+                <h2 style="font-family: 'Cinzel'; margin-bottom: 20px;">Expression Box</h2>
+                <form action="https://formspree.io/f/YOUR_ID" method="POST">
+                    <textarea name="message" placeholder="What are your wishes for us in 2026?" required></textarea>
+                    <button type="submit" class="btn btn-gold">Send to My Heart</button>
+                </form>
+            </div>
+            <p style="margin-top: 40px; opacity: 0.3; font-family: 'Cinzel'; letter-spacing: 5px;">M M X X V I</p>
+        </section>
+    </div>
+
+    <script>
+        const songs = ['music1.mp3', 'music2.mp3', 'music3.mp3'];
+        let currentSongIndex = 0;
+        const player = document.getElementById('player');
+        const timerDisplay = document.getElementById('timer-display');
+        const subText = document.getElementById('sub-text');
+
+        function playNext() {
+            player.src = songs[currentSongIndex];
+            player.play().catch(e => console.log("Audio play blocked"));
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+        }
+
+        player.onended = playNext;
+
+        function initExperience() {
+            document.getElementById('start-btn').style.display = 'none';
+            playNext(); 
+            subText.innerText = "Time until 2026";
+            setInterval(updateClock, 1000);
+            updateClock();
+            animate();
+        }
+
+        function updateClock() {
+            const target = new Date("January 1, 2026 00:00:00").getTime();
+            const now = new Date().getTime();
+            const diff = target - now;
+            const s = Math.floor(diff / 1000);
+
+            if (s <= 0) {
+                reveal();
+            } else if (s <= 60) {
+                // Final Minute - Big Numbers
+                timerDisplay.innerText = s;
+                timerDisplay.style.fontSize = "clamp(6rem, 25vw, 12rem)";
+                subText.innerText = "Hold your breath...";
+                if(Math.random() < 0.3) launchFirework();
+            } else {
+                // Normal Countdown
+                const h = Math.floor(s / 3600);
+                const m = Math.floor((s % 3600) / 60);
+                const sec = s % 60;
+                timerDisplay.innerText = 
+                    `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+            }
+        }
+
+        function reveal() {
+            document.getElementById('countdown-stage').style.transform = 'translateY(-100%)';
+            setTimeout(() => {
+                document.getElementById('countdown-stage').style.display = 'none';
+                document.getElementById('main-content').style.display = 'flex';
+            }, 1100);
+            setInterval(launchFirework, 400);
+        }
+
+        function unlockHeart() {
+            document.getElementById('heart-form-section').classList.add('unlocked');
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        // --- FIREWORKS ---
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        window.onresize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+
+        function launchFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * (canvas.height * 0.5);
+            for(let i=0; i<35; i++) particles.push({ x, y, vx:(Math.random()-0.5)*12, vy:(Math.random()-0.5)*12, a:1 });
+        }
+        function animate() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            particles.forEach((p,i) => {
+                p.x += p.vx; p.y += p.vy; p.a -= 0.02;
+                ctx.globalAlpha = p.a; ctx.fillStyle = '#d4af37';
+                ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, 7); ctx.fill();
+                if(p.a <= 0) particles.splice(i,1);
+            });
+            requestAnimationFrame(animate);
+        }
+    </script>
+</body>
+</html>
