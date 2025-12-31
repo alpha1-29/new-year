@@ -39,10 +39,17 @@
 
         .page-wrapper { display: none; flex-direction: column; width: 100%; position: relative; }
         .section { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; z-index: 10; }
-        .glass-card { background: var(--card); backdrop-filter: blur(10px); padding: clamp(20px, 5vw, 40px); border-radius: 20px; border: 1px solid var(--rose); max-width: 600px; width: 100%; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .glass-card { background: var(--card); backdrop-filter: blur(10px); padding: clamp(20px, 5vw, 40px); border-radius: 20px; border: 1px solid var(--rose); max-width: 600px; width: 100%; box-shadow: 0 15px 35px rgba(0,0,0,0.5); margin-bottom: 30px; }
 
         .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin: 25px 0; }
         .photo-grid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; border: 1px solid var(--rose); }
+
+        /* --- CHAT GALLERY --- */
+        #memory-gallery { display: none; margin-top: 20px; width: 100%; }
+        .gallery-grid { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 10px; }
+        .chat-ss { width: 100%; border-radius: 15px; border: 1px solid var(--rose); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .heart-icon-btn { background: transparent; border: 2px solid var(--rose); color: var(--rose); padding: 15px 25px; border-radius: 50px; font-family: 'Cinzel'; cursor: pointer; margin: 20px 0; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; font-weight: bold; }
+        .heart-icon-btn:hover { background: var(--rose); color: white; }
 
         .mallu-msg { font-family: 'Noto Sans Malayalam'; font-size: clamp(1.4rem, 6vw, 2rem); color: var(--accent); margin: 20px 0; }
 
@@ -117,6 +124,30 @@
 
         <section class="section">
             <div class="glass-card">
+                <h2 style="font-family: 'Cinzel'; margin-bottom: 10px;">Memory Lane</h2>
+                <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 15px;">I saved a few moments from our 2025...</p>
+                
+                <button class="heart-icon-btn" onclick="showMemories()">
+                    <span>Click to see our romantic texts</span> ❤️
+                </button>
+
+                <div id="memory-gallery">
+                    <div class="gallery-grid">
+                        <img src="chat1.jpg" class="chat-ss">
+                        <img src="chat2.jpg" class="chat-ss">
+                        <img src="chat3.jpg" class="chat-ss">
+                        <img src="chat4.jpg" class="chat-ss">
+                        <img src="chat5.jpg" class="chat-ss">
+                        <img src="chat6.jpg" class="chat-ss">
+                        <img src="chat7.jpg" class="chat-ss">
+                        <img src="chat8.jpg" class="chat-ss">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="glass-card">
                 <h2 style="font-family: 'Cinzel'; margin-bottom: 25px;">The Pookie Test</h2>
                 <p style="margin-bottom: 25px;">Who makes my world complete?</p>
                 <button class="btn" style="margin: 5px;" onclick="alert('Think again! ❤️')">The Stars</button>
@@ -168,17 +199,6 @@
         }
         player.onended = playNext;
 
-        // Stop music when tab is hidden
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden) {
-                player.pause();
-            } else {
-                if (document.getElementById('start-btn').style.display === 'none') {
-                    player.play().catch(e => console.log("Resume blocked"));
-                }
-            }
-        });
-
         // --- 3. UI HELPERS ---
         function triggerSlip(text, emoji, duration) {
             const slip = document.getElementById('admin-slip');
@@ -190,6 +210,13 @@
                 slip.classList.add('show');
                 setTimeout(() => { slip.classList.remove('show'); }, duration);
             }, 300);
+        }
+
+        function showMemories() {
+            const gallery = document.getElementById('memory-gallery');
+            gallery.style.display = 'block';
+            gallery.scrollIntoView({ behavior: 'smooth' });
+            triggerSlip("Look at how far we've come... ❤️", "📸", 5000);
         }
 
         // --- 4. COUNTDOWN LOGIC ---
@@ -257,11 +284,9 @@
                 if (isMidnight) {
                     setTimeout(() => triggerSlip("HAPPY NEW YEAR MY EVERYTHING! ❤️", "🎆", 5000), 1000);
                     setTimeout(() => triggerSlip("I love you so much.", "🫂", 4000), 7000);
-                    setTimeout(() => triggerSlip("Check our memories below 📸", "✨", 4000), 13000);
                 } else {
-                    setTimeout(() => triggerSlip("Look who finally showed up! 😂❤️", "💌", 5000), 1000);
-                    setTimeout(() => triggerSlip("Happy New Year, Alfiya! ✨", "🎆", 5000), 7000);
-                    setTimeout(() => triggerSlip("I love you forever.", "🌙", 5000), 13000);
+                    setTimeout(() => triggerSlip("Happy New Year, Alfiya! ✨", "🎆", 5000), 1000);
+                    setTimeout(() => triggerSlip("I love you forever.", "🌙", 5000), 7000);
                 }
             }, 1100);
         }
