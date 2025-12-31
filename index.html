@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>2026 | For Alfiya</title>
+
     <meta property="og:title" content="2026 | For Alfiya">
     <meta property="og:description" content="A special surprise for the New Year. ✨">
-    <meta name="description" content="Click to enter our 2026">
+    <meta property="og:image" content=""> <meta name="description" content="Click to enter our 2026">
 
     <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
 
@@ -29,6 +29,7 @@
             z-index: 2000; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             text-align: center; 
+            background: #0a0a0a; /* Ensure pic1 isn't seen until Start is clicked */
             transition: 1.2s cubic-bezier(0.7, 0, 0.3, 1); 
         }
 
@@ -36,6 +37,7 @@
             position: absolute; inset: 0;
             z-index: -1;
             background: #000;
+            display: none; /* Hidden until experience starts */
         }
 
         .slide {
@@ -66,10 +68,11 @@
         .glass-card { background: var(--card); backdrop-filter: blur(10px); padding: clamp(25px, 5vw, 45px); border-radius: 20px; border: 1px solid var(--rose); max-width: 600px; width: 100%; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
         .mallu-msg { font-family: 'Noto Sans Malayalam'; font-size: clamp(1.4rem, 6vw, 2rem); color: var(--accent); margin: 25px 0; line-height: 1.4; }
 
-        .btn { background: var(--rose); color: white; border: none; padding: 18px 36px; border-radius: 50px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .btn { background: var(--rose); color: white; border: none; padding: 18px 36px; border-radius: 50px; cursor: pointer; font-weight: 600; font-family: 'Montserrat'; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .btn:hover { transform: scale(1.05); }
         .btn-gold { background: var(--accent); color: #000; width: 100%; margin-top: 20px; font-family: 'Cinzel'; letter-spacing: 3px; font-weight: bold; }
 
-        textarea { width: 100%; height: 160px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--rose); padding: 15px; border-radius: 12px; margin-bottom: 10px; }
+        textarea { width: 100%; height: 160px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--rose); padding: 15px; border-radius: 12px; font-family: 'Montserrat'; font-size: 1rem; margin-bottom: 10px; }
 
         #heart-form-section { opacity: 0.2; pointer-events: none; transition: 1s; }
         .unlocked { opacity: 1 !important; pointer-events: auto !important; }
@@ -108,26 +111,27 @@
             <div class="glass-card">
                 <h2 style="font-family: 'Cinzel'; margin-bottom: 25px;">The Pookie Test</h2>
                 <p style="margin-bottom: 25px;">Who makes my world complete?</p>
-                <button class="btn" onclick="unlockHeart()">OFC ME 🥹💋</button>
+                <button class="btn" style="margin: 5px;" onclick="alert('Think again! ❤️')">The Stars</button>
+                <button class="btn" style="margin: 5px;" onclick="unlockHeart()">OFC ME 🥹💋</button>
             </div>
         </section>
 
         <section class="section" id="heart-form-section">
             <div class="glass-card">
+                <h2 style="font-family: 'Cinzel'; margin-bottom: 20px;">Expression Box</h2>
                 <form action="https://formspree.io/f/mjgvqgkk" method="POST">
                     <textarea name="message" placeholder="What are your wishes for us in 2026?" required></textarea>
                     <button type="submit" class="btn btn-gold">Send to My Heart</button>
                 </form>
             </div>
+            <p style="margin-top: 40px; opacity: 0.3; font-family: 'Cinzel'; letter-spacing: 5px;">M M X X V I</p>
         </section>
     </div>
 
     <script>
-        // Updated for 17 songs
+        // Array setup for all 17 songs
         const songs = [];
-        for (let i = 1; i <= 17; i++) {
-            songs.push(`music${i}.mp3`);
-        }
+        for(let i=1; i<=17; i++) { songs.push(`music${i}.mp3`); }
         
         let currentSongIndex = 0;
         const player = document.getElementById('player');
@@ -135,16 +139,16 @@
         const subText = document.getElementById('sub-text');
 
         function playNext() {
-            if(currentSongIndex >= songs.length) currentSongIndex = 0;
             player.src = songs[currentSongIndex];
-            player.play().catch(e => console.log("Waiting for user interaction"));
-            currentSongIndex++;
+            player.play().catch(e => console.log("Audio play blocked"));
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
         }
 
         player.onended = playNext;
 
         function initExperience() {
             document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('slideshow').style.display = 'block'; // Show photos only after click
             playNext(); 
             subText.innerText = "Time until 2026";
             
