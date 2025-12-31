@@ -12,52 +12,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-       /* DEFAULT DARK MODE (Your current colors) */
-:root {
-    --bg: #0a0a0a;
-    --card: rgba(25, 25, 25, 0.95);
-    --text: #fdf5e6;
-    --accent: #ffcc33;
-    --rose: #ff85a2;
-    --paper: #fffbe6;
-}
+        /* Your original styles kept exactly the same */
+        :root {
+            --bg: #0a0a0a;
+            --card: rgba(25, 25, 25, 0.95);
+            --text: #fdf5e6;
+            --accent: #ffcc33;
+            --rose: #ff85a2;
+            --paper: #fffbe6;
+        }
 
-/* AUTOMATIC LIGHT MODE (If her phone is set to Light) */
-@media (prefers-color-scheme: light) {
-    :root {
-        --bg: #f9f9f9; /* Soft White */
-        --card: rgba(255, 255, 255, 0.9); /* Pure white glass */
-        --text: #2d2d2d; /* Dark grey text */
-        --rose: #e91e63; /* Deeper Pink for visibility */
-        --accent: #b8860b; /* Darker gold for light bg */
-        --paper: #ffffff;
-    }
-    
-    #countdown-stage {
-        background: var(--bg);
-    }
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f9f9f9;
+                --card: rgba(255, 255, 255, 0.9);
+                --text: #2d2d2d;
+                --rose: #e91e63;
+                --accent: #b8860b;
+                --paper: #ffffff;
+            }
+            #countdown-stage { background: var(--bg); }
+            .glass-card { box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid rgba(233, 30, 99, 0.3); }
+            .message-slip { background: white; box-shadow: -10px 10px 25px rgba(0,0,0,0.1); }
+        }
 
-    .glass-card {
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        border: 1px solid rgba(233, 30, 99, 0.3);
-    }
-    
-    .message-slip {
-        background: white;
-        box-shadow: -10px 10px 25px rgba(0,0,0,0.1);
-    }
-}
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: var(--bg); color: var(--text); font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
 
-        /* --- STAGES --- */
         #countdown-stage { 
-            position: fixed; inset: 0; 
-            background: var(--bg);
-            z-index: 2000; 
+            position: fixed; inset: 0; background: var(--bg); z-index: 2000; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            text-align: center; 
-            transition: 1.2s cubic-bezier(0.7, 0, 0.3, 1); 
+            text-align: center; transition: 1.2s cubic-bezier(0.7, 0, 0.3, 1); 
         }
         #timer-display { font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 12vw, 7rem); color: var(--accent); margin: 20px 0; }
         .status-msg { letter-spacing: 5px; color: var(--rose); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
@@ -130,9 +115,7 @@
             <h1 style="font-family: 'Birthstone'; font-size: clamp(4rem, 15vw, 6rem); color: var(--rose); margin-bottom: 10px;">For Alfiya</h1>
             <div class="glass-card">
                 <p style="line-height: 1.6; font-size: 0.95rem;">
-                    Happy New Year, Alfiya. Every second with you is a gift. I'm missing you a lot. All the silence, misunderstanding, etc. can't stop us. This is for you. Let's keep this real, and achieve the best together. ❤️🫂 I strongly believe in us. I'm ready to face any problem as long as it's you and me. 
-                    <br><br>
-                    This is our 4th New Year together! And it's been 1360 days since we've met! I did my best to make this for you. Let's thrive in 2026 together!
+                    Happy New Year, Alfiya. Every second with you is a gift. ❤️🫂 I strongly believe in us. I'm ready to face any problem as long as it's you and me. Let's thrive in 2026 together!
                 </p>
                 <div class="photo-grid">
                     <img src="pic1.jpg"> <img src="pic2.jpg">
@@ -184,15 +167,6 @@
         const songs = [];
         for(let i=1; i<=17; i++) { songs.push(`music${i}.mp3`); }
 
-        const countdownMessages = [
-            "Missing you a little extra right now... ❤️",
-            "Are you excited for our 4th year? 🥹",
-            "I'm so lucky to have you, Alfiya. ✨",
-            "1360 days and I'd do it all again. ❤️",
-            "Are you ready for the surprise? 🎁",
-            "Keep looking at the timer... something's coming! ⏳"
-        ];
-        
         let currentSongIndex = 0;
         let specialAudioPlayed = false;
         const player = document.getElementById('player');
@@ -212,7 +186,6 @@
             currentSongIndex++;
         }
         player.onended = playNext;
-
         fwSound.onended = () => { player.play().catch(e => {}); };
 
         function triggerSlip(text, emoji, duration) {
@@ -239,13 +212,43 @@
             if (s <= 0) {
                 reveal(true); 
             } else {
-                // AUTO POPUPS: Every 3 minutes
-                if (s > 60 && s % 180 === 0) {
-                    const msg = countdownMessages[Math.floor(Math.random() * countdownMessages.length)];
-                    triggerSlip(msg, "💌", 5000);
+                // POPUPS EVERY 120 SECONDS (2 Minutes)
+                if (s > 60 && s % 120 === 0) {
+                    let msg = ""; let emoji = "✨";
+                    if (s > 3600) { // Over 1 hour left
+                        const hourly = [
+                            "Still thinking about you... 💭",
+                            "How are you so pretty even in 2025? lol ❤️",
+                            "Waiting for 2026 like... 👁️👄👁️",
+                            "1,360 days and you still give me butterflies. 🦋",
+                            "I promise this surprise is worth the wait! 🎁"
+                        ];
+                        msg = hourly[Math.floor(Math.random() * hourly.length)];
+                        emoji = "💌";
+                    } else if (s > 600) { // 10 to 60 minutes left
+                        const countdown = [
+                            "ONLY A FEW MINS LEFT OMG 😱",
+                            "You + Me + 2026 = Perfection. ✨",
+                            "Ready to be my 2026 pookie? 💋",
+                            "Don't forget to check your volume! 🔊",
+                            "I hope you're smiling right now. 😊"
+                        ];
+                        msg = countdown[Math.floor(Math.random() * countdown.length)];
+                        emoji = "⏳";
+                    } else { // Last 10 minutes
+                        const finalStretch = [
+                            "LOCK IN! ALMOST THERE! 🔒",
+                            "My heart is actually beating so fast lol ❤️",
+                            "Get ready for the main event! 🎆",
+                            "I LOVE YOU ALFIYAAA! ❤️",
+                            "Almost time to leave 2025 behind... ✌️"
+                        ];
+                        msg = finalStretch[Math.floor(Math.random() * finalStretch.length)];
+                        emoji = "🔥";
+                    }
+                    triggerSlip(msg, emoji, 5000);
                 }
 
-                // TRIGGER AUDIO SYNC AT 10 SECONDS
                 if (s === 10 && !specialAudioPlayed) {
                     player.pause(); 
                     fwSound.play().catch(e => {}); 
@@ -256,7 +259,7 @@
                 if (s <= 60) {
                     timerDisplay.innerText = s;
                     timerDisplay.style.fontSize = "clamp(6rem, 25vw, 12rem)";
-                    subText.innerText = (s <= 10) ? "COUNT IT DOWN..." : "Hold your breath...";
+                    subText.innerText = (s <= 10) ? "COUNT IT DOWN!!" : "Almost there...";
                     if(s <= 10 || Math.random() < 0.3) createFirework();
                 } else {
                     const h = Math.floor(s / 3600);
@@ -273,7 +276,7 @@
             setInterval(updateClock, 1000);
             updateClock();
             animateParticles();
-            triggerSlip("I missed you. Glad you're here. ❤️", "🫂", 5000);
+            triggerSlip("Welcome to our 2026. ❤️", "🫂", 5000);
         }
 
         function reveal(isMidnight) {
