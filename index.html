@@ -6,47 +6,11 @@
     <title>2026 | For Alfiya</title>
     
     <meta property="og:title" content="A Gift for 2026">
-    <meta property="og:description" content="Open this at Midnight. ✨">
+    <meta property="og:description" content="Open this for a surprise. ✨">
     <meta property="og:image" content="https://img.icons8.com/color/480/000000/confetti.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
     <meta property="og:type" content="website">
 
     <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
-    
-    ```
-
----
-
-### 2. Force Instagram to "Forget" your face
-Instagram won't notice the change automatically for 24 hours unless you force it. Since you don't have time to wait, do this:
-
-1.  Go to the **[Facebook/Instagram Link Debugger](https://developers.facebook.com/tools/debug/)**.
-2.  Paste your link: `https://alpha1-29.github.io/new-year/`
-3.  Click **Debug**.
-4.  It will show you the old "pic1.jpg" preview. Click the **"Scrape Again"** button.
-5.  **Repeat clicking "Scrape Again"** 2 or 3 times until the preview image changes to the confetti icon.
-
-### 3. The "Secret" Trick (If the debugger is too slow)
-If you are in a rush and Instagram is being stubborn, send the link like this:
-`https://alpha1-29.github.io/new-year/?v=1`
-
-Adding the `?v=1` at the end tricks Instagram into thinking it’s a brand new link it has never seen before, so it will look at the new tags immediately.
-
-**Try the Scrape Again button first—that usually fixes it in 10 seconds!**
-    
-    ```
-
-### ⚠️ IMPORTANT STEP (The "Refresh"):
-Instagram "remembers" (caches) the old thumbnail. Even if you change the code, the link might still show your face for a while. 
-
-**To force Instagram to update the preview:**
-1.  Go to the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) (Instagram uses this same system).
-2.  Paste your website link.
-3.  Click **Debug**.
-4.  Click **Scrape Again**. This tells Instagram: *"Hey, the site changed, look at the new spoiler-free tags!"*
-
-**Do this now so the surprise stays a surprise! Let me know if you need help with the debugger.**
 
     <style>
         :root {
@@ -172,9 +136,10 @@ Instagram "remembers" (caches) the old thumbnail. Even if you change the code, t
     </div>
 
     <script>
+        // --- 1. MUSIC & DATA SETUP ---
         const songs = [];
         for(let i=1; i<=17; i++) { songs.push(`music${i}.mp3`); }
-
+        
         const countdownMessages = [
             "Missing you a little extra right now... ❤️",
             "Are you excited for our 4th year? 🥹",
@@ -193,13 +158,28 @@ Instagram "remembers" (caches) the old thumbnail. Even if you change the code, t
         let particles = [];
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 
+        // --- 2. AUDIO ENGINE ---
         function playNext() {
+            if (currentSongIndex >= songs.length) currentSongIndex = 0;
             player.src = songs[currentSongIndex];
-            player.play().catch(e => console.log("Audio play blocked"));
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            player.load();
+            player.play().catch(e => console.log("Audio waiting for user interaction"));
+            currentSongIndex++;
         }
         player.onended = playNext;
 
+        // Stop music when tab is hidden
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                player.pause();
+            } else {
+                if (document.getElementById('start-btn').style.display === 'none') {
+                    player.play().catch(e => console.log("Resume blocked"));
+                }
+            }
+        });
+
+        // --- 3. UI HELPERS ---
         function triggerSlip(text, emoji, duration) {
             const slip = document.getElementById('admin-slip');
             const slipText = document.getElementById('slip-text');
@@ -212,6 +192,7 @@ Instagram "remembers" (caches) the old thumbnail. Even if you change the code, t
             }, 300);
         }
 
+        // --- 4. COUNTDOWN LOGIC ---
         function updateClock() {
             const target = new Date("January 1, 2026 00:00:00").getTime();
             const now = new Date().getTime();
@@ -219,7 +200,7 @@ Instagram "remembers" (caches) the old thumbnail. Even if you change the code, t
             const s = Math.floor(diff / 1000);
 
             if (s <= 0) {
-                reveal(true); // Midnight trigger
+                reveal(true); 
             } else {
                 if (s > 60 && s <= 3600 && s % 180 === 0) {
                     const msg = countdownMessages[Math.floor(Math.random() * countdownMessages.length)];
@@ -231,7 +212,7 @@ Instagram "remembers" (caches) the old thumbnail. Even if you change the code, t
                 if (s <= 60) {
                     timerDisplay.innerText = s;
                     timerDisplay.style.fontSize = "clamp(6rem, 25vw, 12rem)";
-                    subText.innerText = "Prepare for 2026...";
+                    subText.innerText = "Hold your breath...";
                     if(Math.random() < 0.4) createFirework();
                 } else {
                     const h = Math.floor(s / 3600);
@@ -245,12 +226,11 @@ Instagram "remembers" (caches) the old thumbnail. Even if you change the code, t
         function initExperience() {
             const target = new Date("January 1, 2026 00:00:00").getTime();
             const now = new Date().getTime();
-            
             document.getElementById('start-btn').style.display = 'none';
             playNext(); 
 
             if (now >= target) {
-                reveal(false); // Late trigger
+                reveal(false); 
             } else {
                 subText.innerText = "Time until 2026";
                 setInterval(updateClock, 1000);
@@ -278,17 +258,15 @@ Instagram "remembers" (caches) the old thumbnail. Even if you change the code, t
                     setTimeout(() => triggerSlip("HAPPY NEW YEAR MY EVERYTHING! ❤️", "🎆", 5000), 1000);
                     setTimeout(() => triggerSlip("I love you so much.", "🫂", 4000), 7000);
                     setTimeout(() => triggerSlip("Check our memories below 📸", "✨", 4000), 13000);
-                    setTimeout(() => triggerSlip("To 2026 and beyond! 🌙", "💍", 4000), 19000);
                 } else {
-                    // LATE ARRIVAL MESSAGES
                     setTimeout(() => triggerSlip("Look who finally showed up! 😂❤️", "💌", 5000), 1000);
                     setTimeout(() => triggerSlip("Happy New Year, Alfiya! ✨", "🎆", 5000), 7000);
-                    setTimeout(() => triggerSlip("I made this for you tonight.", "🎁", 5000), 13000);
-                    setTimeout(() => triggerSlip("I love you forever.", "🌙", 5000), 19000);
+                    setTimeout(() => triggerSlip("I love you forever.", "🌙", 5000), 13000);
                 }
             }, 1100);
         }
 
+        // --- 5. VISUAL EFFECTS ---
         function createFirework() {
             const x = Math.random() * canvas.width;
             const y = Math.random() * (canvas.height * 0.4);
