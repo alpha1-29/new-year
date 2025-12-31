@@ -12,15 +12,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --bg: #0a0a0a;
-            --card: rgba(25, 25, 25, 0.95);
-            --text: #fdf5e6;
-            --accent: #ffcc33;
-            --rose: #ff85a2;
-            --paper: #fffbe6;
-        }
+       /* DEFAULT DARK MODE (Your current colors) */
+:root {
+    --bg: #0a0a0a;
+    --card: rgba(25, 25, 25, 0.95);
+    --text: #fdf5e6;
+    --accent: #ffcc33;
+    --rose: #ff85a2;
+    --paper: #fffbe6;
+}
 
+/* AUTOMATIC LIGHT MODE (If her phone is set to Light) */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg: #f9f9f9; /* Soft White */
+        --card: rgba(255, 255, 255, 0.9); /* Pure white glass */
+        --text: #2d2d2d; /* Dark grey text */
+        --rose: #e91e63; /* Deeper Pink for visibility */
+        --accent: #b8860b; /* Darker gold for light bg */
+        --paper: #ffffff;
+    }
+    
+    #countdown-stage {
+        background: var(--bg);
+    }
+
+    .glass-card {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border: 1px solid rgba(233, 30, 99, 0.3);
+    }
+    
+    .message-slip {
+        background: white;
+        box-shadow: -10px 10px 25px rgba(0,0,0,0.1);
+    }
+}
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: var(--bg); color: var(--text); font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
 
