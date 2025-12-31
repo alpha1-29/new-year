@@ -25,7 +25,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: var(--bg); color: var(--text); font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
 
-        /* --- COUNTDOWN STAGE --- */
+        /* --- STAGES --- */
         #countdown-stage { 
             position: fixed; inset: 0; 
             background: var(--bg);
@@ -37,18 +37,16 @@
         #timer-display { font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 12vw, 7rem); color: var(--accent); margin: 20px 0; }
         .status-msg { letter-spacing: 5px; color: var(--rose); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
 
-        /* --- MAIN CONTENT --- */
         .page-wrapper { display: none; flex-direction: column; width: 100%; position: relative; }
         .section { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; z-index: 10; }
         .glass-card { background: var(--card); backdrop-filter: blur(10px); padding: clamp(20px, 5vw, 40px); border-radius: 20px; border: 1px solid var(--rose); max-width: 600px; width: 100%; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
 
-        /* --- PHOTO GRID --- */
         .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin: 25px 0; }
         .photo-grid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; border: 1px solid var(--rose); }
 
         .mallu-msg { font-family: 'Noto Sans Malayalam'; font-size: clamp(1.4rem, 6vw, 2rem); color: var(--accent); margin: 20px 0; }
 
-        /* --- CUTE SLIP NOTIFICATION --- */
+        /* --- MESSAGE SLIP --- */
         .message-slip {
             position: fixed; top: 30px; right: -450px; 
             background: var(--paper); color: #333;
@@ -63,7 +61,6 @@
         }
         .message-slip.show { right: 0 !important; }
 
-        /* --- UI ELEMENTS --- */
         .btn { background: var(--rose); color: white; border: none; padding: 18px 36px; border-radius: 50px; cursor: pointer; font-weight: 600; transition: 0.3s; }
         .btn-gold { background: var(--accent); color: #000; width: 100%; margin-top: 20px; font-family: 'Cinzel'; font-weight: bold; padding: 15px; border-radius: 50px; border: none; cursor: pointer; }
         textarea { width: 100%; height: 120px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--rose); padding: 15px; border-radius: 12px; font-family: 'Montserrat'; }
@@ -139,22 +136,26 @@
     </div>
 
     <script>
-        // Setup all 17 songs
         const songs = [];
         for(let i=1; i<=17; i++) { songs.push(`music${i}.mp3`); }
+
+        const countdownMessages = [
+            "Missing you a little extra right now... ❤️",
+            "Are you excited for our 4th year? 🥹",
+            "I'm so lucky to have you, Alfiya. ✨",
+            "1360 days and I'd do it all again. ❤️",
+            "Are you ready for the surprise? 🎁",
+            "Counting every single second for you... ⏳"
+        ];
 
         let currentSongIndex = 0;
         const player = document.getElementById('player');
         const timerDisplay = document.getElementById('timer-display');
         const subText = document.getElementById('sub-text');
-
         const canvas = document.getElementById('fireworks-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        let fireworkInterval;
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-
-        let usedMessages = new Set();
 
         function playNext() {
             player.src = songs[currentSongIndex];
@@ -163,13 +164,16 @@
         }
         player.onended = playNext;
 
-        function initExperience() {
-            document.getElementById('start-btn').style.display = 'none';
-            playNext(); 
-            subText.innerText = "Time until 2026";
-            setInterval(updateClock, 1000);
-            updateClock();
-            animateParticles();
+        function triggerSlip(text, emoji, duration) {
+            const slip = document.getElementById('admin-slip');
+            const slipText = document.getElementById('slip-text');
+            const slipEmoji = document.getElementById('slip-emoji');
+            slip.classList.remove('show');
+            setTimeout(() => {
+                slipText.innerText = text; slipEmoji.innerText = emoji;
+                slip.classList.add('show');
+                setTimeout(() => { slip.classList.remove('show'); }, duration);
+            }, 300);
         }
 
         function updateClock() {
@@ -179,58 +183,81 @@
             const s = Math.floor(diff / 1000);
 
             if (s <= 0) {
-                reveal();
-            } else if (s <= 60) {
-                timerDisplay.innerText = s;
-                timerDisplay.style.fontSize = "clamp(6rem, 25vw, 12rem)";
-                subText.innerText = "Hold your breath...";
+                reveal(true); // Midnight trigger
             } else {
-                const h = Math.floor(s / 3600);
-                const m = Math.floor((s % 3600) / 60);
-                const sec = s % 60;
-                timerDisplay.innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+                if (s > 60 && s <= 3600 && s % 180 === 0) {
+                    const msg = countdownMessages[Math.floor(Math.random() * countdownMessages.length)];
+                    triggerSlip(msg, "💌", 5000);
+                }
+                if (s === 30) triggerSlip("Almost there, Alfiya... ❤️", "⏳", 4000);
+                if (s === 10) triggerSlip("Get ready for 2026! ✨", "🔥", 5000);
+
+                if (s <= 60) {
+                    timerDisplay.innerText = s;
+                    timerDisplay.style.fontSize = "clamp(6rem, 25vw, 12rem)";
+                    subText.innerText = "Prepare for 2026...";
+                    if(Math.random() < 0.4) createFirework();
+                } else {
+                    const h = Math.floor(s / 3600);
+                    const m = Math.floor((s % 3600) / 60);
+                    const sec = s % 60;
+                    timerDisplay.innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+                }
             }
         }
 
-        function triggerSlip(id, text, emoji, duration) {
-            if (usedMessages.has(id)) return;
-            usedMessages.add(id);
-            const slip = document.getElementById('admin-slip');
-            const slipText = document.getElementById('slip-text');
-            const slipEmoji = document.getElementById('slip-emoji');
-            slip.classList.remove('show');
-            setTimeout(() => {
-                slipText.innerText = text;
-                slipEmoji.innerText = emoji;
-                slip.classList.add('show');
-                setTimeout(() => { slip.classList.remove('show'); }, duration);
-            }, 300);
+        function initExperience() {
+            const target = new Date("January 1, 2026 00:00:00").getTime();
+            const now = new Date().getTime();
+            
+            document.getElementById('start-btn').style.display = 'none';
+            playNext(); 
+
+            if (now >= target) {
+                reveal(false); // Late trigger
+            } else {
+                subText.innerText = "Time until 2026";
+                setInterval(updateClock, 1000);
+                updateClock();
+                animateParticles();
+            }
         }
 
-        function reveal() {
+        function reveal(isMidnight) {
             if (document.getElementById('main-content').style.display === 'flex') return;
             document.getElementById('countdown-stage').style.transform = 'translateY(-100%)';
-            fireworkInterval = setInterval(createFirework, 400);
+            let fwInterval = setInterval(createFirework, 400);
+            
             setTimeout(() => {
-                clearInterval(fireworkInterval);
-                setTimeout(() => { particles = []; canvas.style.display = 'none'; }, 2000);
+                clearInterval(fwInterval);
+                setTimeout(() => { canvas.style.display = 'none'; }, 2000);
                 setInterval(createHeart, 600); 
             }, 5000);
 
             setTimeout(() => {
                 document.getElementById('countdown-stage').style.display = 'none';
                 document.getElementById('main-content').style.display = 'flex';
-                setTimeout(() => triggerSlip("m1", "Happy New Year, Alfiya! ❤️", "✨", 3500), 2000);
-                setTimeout(() => triggerSlip("m2", "4 years... so proud of us.", "🥺", 3500), 12000);
-                setTimeout(() => triggerSlip("m3", "Look at our photos below!", "📸", 3500), 22000);
+                
+                if (isMidnight) {
+                    setTimeout(() => triggerSlip("HAPPY NEW YEAR MY EVERYTHING! ❤️", "🎆", 5000), 1000);
+                    setTimeout(() => triggerSlip("I love you so much.", "🫂", 4000), 7000);
+                    setTimeout(() => triggerSlip("Check our memories below 📸", "✨", 4000), 13000);
+                    setTimeout(() => triggerSlip("To 2026 and beyond! 🌙", "💍", 4000), 19000);
+                } else {
+                    // LATE ARRIVAL MESSAGES
+                    setTimeout(() => triggerSlip("Look who finally showed up! 😂❤️", "💌", 5000), 1000);
+                    setTimeout(() => triggerSlip("Happy New Year, Alfiya! ✨", "🎆", 5000), 7000);
+                    setTimeout(() => triggerSlip("I made this for you tonight.", "🎁", 5000), 13000);
+                    setTimeout(() => triggerSlip("I love you forever.", "🌙", 5000), 19000);
+                }
             }, 1100);
         }
 
         function createFirework() {
             const x = Math.random() * canvas.width;
             const y = Math.random() * (canvas.height * 0.4);
-            for(let i=0; i<25; i++) {
-                particles.push({ x, y, vx:(Math.random()-0.5)*10, vy:(Math.random()-0.5)*10, alpha:1 });
+            for(let i=0; i<30; i++) {
+                particles.push({ x, y, vx:(Math.random()-0.5)*12, vy:(Math.random()-0.5)*12, alpha:1 });
             }
         }
 
@@ -240,7 +267,7 @@
                 p.x += p.vx; p.y += p.vy; p.alpha -= 0.015;
                 ctx.globalAlpha = p.alpha;
                 ctx.fillStyle = '#ffcc33';
-                ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2); ctx.fill();
                 if(p.alpha <= 0) particles.splice(i,1);
             });
             requestAnimationFrame(animateParticles);
@@ -259,7 +286,7 @@
         function unlockHeart() {
             document.getElementById('heart-form-section').classList.add('unlocked');
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            triggerSlip("m6", "Now write your wishes! ❤️", "📝", 4000);
+            triggerSlip("Now tell me your wishes... ❤️", "📝", 5000);
         }
     </script>
 </body>
