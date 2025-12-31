@@ -327,6 +327,17 @@
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             triggerSlip("Now tell me your wishes... ❤️", "📝", 5000);
         }
+        // Stop music when tab is hidden or app is switched
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        player.pause();
+    } else {
+        // Only resume if she already started the experience
+        if (document.getElementById('start-btn').style.display === 'none') {
+            player.play().catch(e => console.log("Resume blocked by browser"));
+        }
+    }
+});
     </script>
 </body>
 </html>
