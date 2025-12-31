@@ -8,7 +8,6 @@
     <meta property="og:title" content="A Gift for 2026">
     <meta property="og:description" content="Open this for a surprise. ✨">
     <meta property="og:image" content="https://img.icons8.com/color/480/000000/confetti.png">
-    <meta property="og:type" content="website">
 
     <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
 
@@ -44,16 +43,15 @@
         .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin: 25px 0; }
         .photo-grid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; border: 1px solid var(--rose); }
 
-        /* --- CHAT GALLERY --- */
         #memory-gallery { display: none; margin-top: 20px; width: 100%; }
         .gallery-grid { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 10px; }
         .chat-ss { width: 100%; border-radius: 15px; border: 1px solid var(--rose); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        
         .heart-icon-btn { background: transparent; border: 2px solid var(--rose); color: var(--rose); padding: 15px 25px; border-radius: 50px; font-family: 'Cinzel'; cursor: pointer; margin: 20px 0; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; font-weight: bold; }
         .heart-icon-btn:hover { background: var(--rose); color: white; }
 
         .mallu-msg { font-family: 'Noto Sans Malayalam'; font-size: clamp(1.4rem, 6vw, 2rem); color: var(--accent); margin: 20px 0; }
 
-        /* --- MESSAGE SLIP --- */
         .message-slip {
             position: fixed; top: 30px; right: -450px; 
             background: var(--paper); color: #333;
@@ -87,6 +85,7 @@
 <body>
 
     <audio id="player" preload="auto"></audio>
+    <audio id="fireworks-sound" src="countdown_wish.mp3" preload="auto"></audio>
     <canvas id="fireworks-canvas"></canvas>
 
     <div id="admin-slip" class="message-slip">
@@ -96,7 +95,7 @@
 
     <div id="countdown-stage">
         <p class="status-msg" id="sub-text">Prepare your heart</p>
-        <h1 id="timer-display">LETS BEGIN!</h1>
+        <h1 id="timer-display">READY?</h1>
         <button id="start-btn" class="btn" onclick="initExperience()">Enter Our 2026</button>
     </div>
 
@@ -109,15 +108,12 @@
                     <br><br>
                     This is our 4th New Year together! And it's been 1360 days since we've met! I did my best to make this for you. Let's thrive in 2026 together!
                 </p>
-                
                 <div class="photo-grid">
                     <img src="pic1.jpg"> <img src="pic2.jpg">
                     <img src="pic3.jpg"> <img src="pic4.jpg">
                     <img src="pic5.jpg"> <img src="pic6.jpg">
                     <img src="pic7.jpg"> <img src="pic8.jpg">
                 </div>
-
-                <p style="font-size: 0.8rem; opacity: 0.6; font-style: italic; margin-bottom: 10px;">All those hours on call... still never enough time.</p>
                 <p class="mallu-msg">നീയെന്നും എന്റെ പ്രിയപ്പെട്ടവൾ ❤️</p>
             </div>
         </section>
@@ -125,22 +121,15 @@
         <section class="section">
             <div class="glass-card">
                 <h2 style="font-family: 'Cinzel'; margin-bottom: 10px;">Memory Lane</h2>
-                <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 15px;">I saved a few moments from our 2025...</p>
-                
                 <button class="heart-icon-btn" onclick="showMemories()">
                     <span>Click to see our romantic texts</span> ❤️
                 </button>
-
                 <div id="memory-gallery">
                     <div class="gallery-grid">
-                        <img src="chat1.jpg" class="chat-ss">
-                        <img src="chat2.jpg" class="chat-ss">
-                        <img src="chat3.jpg" class="chat-ss">
-                        <img src="chat4.jpg" class="chat-ss">
-                        <img src="chat5.jpg" class="chat-ss">
-                        <img src="chat6.jpg" class="chat-ss">
-                        <img src="chat7.jpg" class="chat-ss">
-                        <img src="chat8.jpg" class="chat-ss">
+                        <img src="chat1.jpg" class="chat-ss"> <img src="chat2.jpg" class="chat-ss">
+                        <img src="chat3.jpg" class="chat-ss"> <img src="chat4.jpg" class="chat-ss">
+                        <img src="chat5.jpg" class="chat-ss"> <img src="chat6.jpg" class="chat-ss">
+                        <img src="chat7.jpg" class="chat-ss"> <img src="chat8.jpg" class="chat-ss">
                     </div>
                 </div>
             </div>
@@ -149,7 +138,6 @@
         <section class="section">
             <div class="glass-card">
                 <h2 style="font-family: 'Cinzel'; margin-bottom: 25px;">The Pookie Test</h2>
-                <p style="margin-bottom: 25px;">Who makes my world complete?</p>
                 <button class="btn" style="margin: 5px;" onclick="alert('Think again! ❤️')">The Stars</button>
                 <button class="btn" style="margin: 5px;" onclick="unlockHeart()">OFC ME 🥹💋</button>
             </div>
@@ -167,21 +155,22 @@
     </div>
 
     <script>
-        // --- 1. MUSIC & DATA SETUP ---
         const songs = [];
         for(let i=1; i<=17; i++) { songs.push(`music${i}.mp3`); }
-        
+
         const countdownMessages = [
             "Missing you a little extra right now... ❤️",
             "Are you excited for our 4th year? 🥹",
             "I'm so lucky to have you, Alfiya. ✨",
             "1360 days and I'd do it all again. ❤️",
             "Are you ready for the surprise? 🎁",
-            "Counting every single second for you... ⏳"
+            "Keep looking at the timer... something's coming! ⏳"
         ];
-
+        
         let currentSongIndex = 0;
+        let specialAudioPlayed = false;
         const player = document.getElementById('player');
+        const fwSound = document.getElementById('fireworks-sound');
         const timerDisplay = document.getElementById('timer-display');
         const subText = document.getElementById('sub-text');
         const canvas = document.getElementById('fireworks-canvas');
@@ -189,27 +178,23 @@
         let particles = [];
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 
-        // --- 2. AUDIO ENGINE ---
         function playNext() {
             if (currentSongIndex >= songs.length) currentSongIndex = 0;
             player.src = songs[currentSongIndex];
             player.load();
-            player.play().catch(e => console.log("Audio waiting for user interaction"));
+            player.play().catch(e => {});
             currentSongIndex++;
         }
         player.onended = playNext;
 
-        // --- 3. UI HELPERS ---
+        fwSound.onended = () => { player.play().catch(e => {}); };
+
         function triggerSlip(text, emoji, duration) {
             const slip = document.getElementById('admin-slip');
-            const slipText = document.getElementById('slip-text');
-            const slipEmoji = document.getElementById('slip-emoji');
-            slip.classList.remove('show');
-            setTimeout(() => {
-                slipText.innerText = text; slipEmoji.innerText = emoji;
-                slip.classList.add('show');
-                setTimeout(() => { slip.classList.remove('show'); }, duration);
-            }, 300);
+            document.getElementById('slip-text').innerText = text;
+            document.getElementById('slip-emoji').innerText = emoji;
+            slip.classList.add('show');
+            setTimeout(() => slip.classList.remove('show'), duration);
         }
 
         function showMemories() {
@@ -219,7 +204,6 @@
             triggerSlip("Look at how far we've come... ❤️", "📸", 5000);
         }
 
-        // --- 4. COUNTDOWN LOGIC ---
         function updateClock() {
             const target = new Date("January 1, 2026 00:00:00").getTime();
             const now = new Date().getTime();
@@ -229,18 +213,25 @@
             if (s <= 0) {
                 reveal(true); 
             } else {
-                if (s > 60 && s <= 3600 && s % 180 === 0) {
+                // AUTO POPUPS: Every 3 minutes
+                if (s > 60 && s % 180 === 0) {
                     const msg = countdownMessages[Math.floor(Math.random() * countdownMessages.length)];
                     triggerSlip(msg, "💌", 5000);
                 }
-                if (s === 30) triggerSlip("Almost there, Alfiya... ❤️", "⏳", 4000);
-                if (s === 10) triggerSlip("Get ready for 2026! ✨", "🔥", 5000);
+
+                // TRIGGER AUDIO SYNC AT 10 SECONDS
+                if (s === 10 && !specialAudioPlayed) {
+                    player.pause(); 
+                    fwSound.play().catch(e => {}); 
+                    specialAudioPlayed = true;
+                    triggerSlip("Listen closely... ❤️", "🎧", 4000);
+                }
 
                 if (s <= 60) {
                     timerDisplay.innerText = s;
                     timerDisplay.style.fontSize = "clamp(6rem, 25vw, 12rem)";
-                    subText.innerText = "Hold your breath...";
-                    if(Math.random() < 0.4) createFirework();
+                    subText.innerText = (s <= 10) ? "COUNT IT DOWN..." : "Hold your breath...";
+                    if(s <= 10 || Math.random() < 0.3) createFirework();
                 } else {
                     const h = Math.floor(s / 3600);
                     const m = Math.floor((s % 3600) / 60);
@@ -251,61 +242,37 @@
         }
 
         function initExperience() {
-            const target = new Date("January 1, 2026 00:00:00").getTime();
-            const now = new Date().getTime();
             document.getElementById('start-btn').style.display = 'none';
             playNext(); 
-
-            if (now >= target) {
-                reveal(false); 
-            } else {
-                subText.innerText = "Time until 2026";
-                setInterval(updateClock, 1000);
-                updateClock();
-                animateParticles();
-            }
+            setInterval(updateClock, 1000);
+            updateClock();
+            animateParticles();
+            triggerSlip("I missed you. Glad you're here. ❤️", "🫂", 5000);
         }
 
         function reveal(isMidnight) {
             if (document.getElementById('main-content').style.display === 'flex') return;
             document.getElementById('countdown-stage').style.transform = 'translateY(-100%)';
-            let fwInterval = setInterval(createFirework, 400);
             
-            setTimeout(() => {
-                clearInterval(fwInterval);
-                setTimeout(() => { canvas.style.display = 'none'; }, 2000);
-                setInterval(createHeart, 600); 
-            }, 5000);
-
             setTimeout(() => {
                 document.getElementById('countdown-stage').style.display = 'none';
                 document.getElementById('main-content').style.display = 'flex';
-                
-                if (isMidnight) {
-                    setTimeout(() => triggerSlip("HAPPY NEW YEAR MY EVERYTHING! ❤️", "🎆", 5000), 1000);
-                    setTimeout(() => triggerSlip("I love you so much.", "🫂", 4000), 7000);
-                } else {
-                    setTimeout(() => triggerSlip("Happy New Year, Alfiya! ✨", "🎆", 5000), 1000);
-                    setTimeout(() => triggerSlip("I love you forever.", "🌙", 5000), 7000);
-                }
+                if (isMidnight) triggerSlip("HAPPY NEW YEAR ALFIYA! ❤️", "🎆", 5000);
+                setInterval(createHeart, 600); 
             }, 1100);
         }
 
-        // --- 5. VISUAL EFFECTS ---
         function createFirework() {
             const x = Math.random() * canvas.width;
             const y = Math.random() * (canvas.height * 0.4);
-            for(let i=0; i<30; i++) {
-                particles.push({ x, y, vx:(Math.random()-0.5)*12, vy:(Math.random()-0.5)*12, alpha:1 });
-            }
+            for(let i=0; i<30; i++) particles.push({ x, y, vx:(Math.random()-0.5)*12, vy:(Math.random()-0.5)*12, alpha:1 });
         }
 
         function animateParticles() {
             ctx.clearRect(0,0,canvas.width,canvas.height);
             particles.forEach((p,i) => {
                 p.x += p.vx; p.y += p.vy; p.alpha -= 0.015;
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = '#ffcc33';
+                ctx.globalAlpha = p.alpha; ctx.fillStyle = '#ffcc33';
                 ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2); ctx.fill();
                 if(p.alpha <= 0) particles.splice(i,1);
             });
@@ -314,12 +281,11 @@
 
         function createHeart() {
             const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
+            heart.className = 'heart'; heart.innerHTML = '❤️';
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.animationDuration = (Math.random()*3+4)+'s';
             document.body.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 7000);
+            setTimeout(() => heart.remove(), 7000);
         }
 
         function unlockHeart() {
@@ -327,17 +293,16 @@
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             triggerSlip("Now tell me your wishes... ❤️", "📝", 5000);
         }
-        // Stop music when tab is hidden or app is switched
-document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-        player.pause();
-    } else {
-        // Only resume if she already started the experience
-        if (document.getElementById('start-btn').style.display === 'none') {
-            player.play().catch(e => console.log("Resume blocked by browser"));
-        }
-    }
-});
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                player.pause();
+                fwSound.pause();
+            } else if (document.getElementById('start-btn').style.display === 'none') {
+                if(!specialAudioPlayed || fwSound.ended) player.play().catch(e => {});
+                else fwSound.play().catch(e => {});
+            }
+        });
     </script>
 </body>
 </html>
