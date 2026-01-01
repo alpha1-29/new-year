@@ -164,30 +164,12 @@
     </div>
 
     <script>
-      // 1. Manually define the playlist so Music 11 is first
-const songs = [
-    "music11.mp3", // Starts with 11
-    "music2.mp3", 
-    "music3.mp3", 
-    "music4.mp3", 
-    "music5.mp3", 
-    "music6.mp3", 
-    "music7.mp3", 
-    "music8.mp3", 
-    "music9.mp3", 
-    "music10.mp3", 
-    "music1.mp3",  // Music 1 is now in the 11th spot
-    "music12.mp3", 
-    "music13.mp3", 
-    "music14.mp3", 
-    "music15.mp3", 
-    "music16.mp3", 
-    "music17.mp3"
-];
-
-// 2. Keep the index at 0 so it starts with the first item in our new list
-let currentSongIndex = 0;
+        // Manually defined playlist - 11 starts, then we'll transition to 3
+        const songs = ["music11.mp3", "music3.mp3"];
+        let currentSongIndex = 0;
         let specialAudioPlayed = false;
+        let timeLeft = 120; // 2 Minutes Manual Timer
+
         const player = document.getElementById('player');
         const fwSound = document.getElementById('fireworks-sound');
         const timerDisplay = document.getElementById('timer-display');
@@ -200,12 +182,11 @@ let currentSongIndex = 0;
         function playNext() {
             if (currentSongIndex >= songs.length) currentSongIndex = 0;
             player.src = songs[currentSongIndex];
-            player.load();
             player.play().catch(e => {});
             currentSongIndex++;
         }
         player.onended = playNext;
-        fwSound.onended = () => { player.play().catch(e => {}); };
+        fwSound.onended = () => { playNext(); };
 
         function triggerSlip(text, emoji, duration) {
             const slip = document.getElementById('admin-slip');
@@ -222,80 +203,47 @@ let currentSongIndex = 0;
             triggerSlip("Look at how far we've come... ❤️", "📸", 5000);
         }
 
-        function updateClock() {
-            const target = new Date("January 1, 2026 00:00:00").getTime();
-            const now = new Date().getTime();
-            const diff = target - now;
-            const s = Math.floor(diff / 1000);
+        // NEW MANUAL CLOCK LOGIC
+        function startManualClock() {
+            const countdownInterval = setInterval(() => {
+                timeLeft--;
 
-            if (s <= 0) {
-                reveal(true); 
-            } else {
-                // POPUPS EVERY 120 SECONDS (2 Minutes)
-                if (s > 60 && s % 120 === 0) {
-                    let msg = ""; let emoji = "✨";
-                    if (s > 3600) { // Over 1 hour left
-                        const hourly = [
-                            "Still thinking about you... 💭",
-                            "How are you so pretty even in 2025? lol ❤️",
-                            "Waiting for 2026 like... 👁️👄👁️",
-                            "1,360 days and you still give me butterflies. 🦋",
-                            "I promise this surprise is worth the wait! 🎁"
-                        ];
-                        msg = hourly[Math.floor(Math.random() * hourly.length)];
-                        emoji = "💌";
-                    } else if (s > 600) { // 10 to 60 minutes left
-                        const countdown = [
-                            "ONLY A FEW MINS LEFT OMG 😱",
-                            "You + Me + 2026 = Perfection. ✨",
-                            "Ready to be my 2026 pookie? 💋",
-                            "Don't forget to check your volume! 🔊",
-                            "I hope you're smiling right now. 😊"
-                        ];
-                        msg = countdown[Math.floor(Math.random() * countdown.length)];
-                        emoji = "⏳";
-                    } else { // Last 10 minutes
-                        const finalStretch = [
-                            "LOCK IN! ALMOST THERE! 🔒",
-                            "My heart is actually beating so fast lol ❤️",
-                            "Get ready for the main event! 🎆",
-                            "I LOVE YOU ALFIYAAA! ❤️",
-                            "Almost time to leave 2025 behind... ✌️"
-                        ];
-                        msg = finalStretch[Math.floor(Math.random() * finalStretch.length)];
-                        emoji = "🔥";
-                    }
-                    triggerSlip(msg, emoji, 5000);
-                }
+                // TRIGGER POPUPS AT SPECIFIC SECONDS
+                if (timeLeft === 110) triggerSlip("I spent so many hours on this for you... 🥺", "💻", 4000);
+                if (timeLeft === 90) triggerSlip("1,360 days and I'm still obsessed with you.", "📈", 4000);
+                if (timeLeft === 70) triggerSlip("Get ready... the best part is coming.", "🎧", 4000);
+                if (timeLeft === 40) triggerSlip("Everything I do, I do for us. ❤️", "🫂", 5000);
 
-                if (s === 10 && !specialAudioPlayed) {
+                // FINAL 10 SECOND SYNC
+                if (timeLeft === 10 && !specialAudioPlayed) {
                     player.pause(); 
                     fwSound.play().catch(e => {}); 
                     specialAudioPlayed = true;
                     triggerSlip("Listen closely... ❤️", "🎧", 4000);
                 }
 
-                if (s <= 60) {
-                    timerDisplay.innerText = s;
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    reveal(true); 
+                } else if (timeLeft <= 60) {
+                    timerDisplay.innerText = timeLeft;
                     timerDisplay.style.fontSize = "clamp(6rem, 25vw, 12rem)";
-                    subText.innerText = (s <= 10) ? "COUNT IT DOWN!!" : "Almost there...";
-                    if(s <= 10 || Math.random() < 0.3) createFirework();
+                    subText.innerText = (timeLeft <= 10) ? "COUNT IT DOWN!!" : "Wait for it...";
+                    if(timeLeft <= 10) createFirework();
                 } else {
-                    const h = Math.floor(s / 3600);
-                    const m = Math.floor((s % 3600) / 60);
-                    const sec = s % 60;
-                    timerDisplay.innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+                    let m = Math.floor(timeLeft / 60);
+                    let s = timeLeft % 60;
+                    timerDisplay.innerText = `00:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
                 }
-            }
+            }, 1000);
         }
 
         function initExperience() {
             document.getElementById('start-btn').style.display = 'none';
             playNext(); 
-            setInterval(updateClock, 1000);
-            updateClock();
+            startManualClock();
             animateParticles();
-            triggerSlip("Welcome to our 2026. ❤️", "🫂", 5000);
+            triggerSlip("Welcome back to our midnight magic. ❤️", "🫂", 5000);
         }
 
         function reveal(isMidnight) {
