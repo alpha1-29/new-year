@@ -12,7 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Your original styles kept exactly the same */
         :root {
             --bg: #0a0a0a;
             --card: rgba(25, 25, 25, 0.95);
@@ -164,11 +163,10 @@
     </div>
 
     <script>
-        // Manually defined playlist - 11 starts, then we'll transition to 3
-        const songs = ["music11.mp3", "music3.mp3"];
+        const songs = ["music16.mp3", "music11.mp3", 'music8.mp3', 'music14.mp3'];
         let currentSongIndex = 0;
         let specialAudioPlayed = false;
-        let timeLeft = 120; // 2 Minutes Manual Timer
+        let timeLeft = 120; 
 
         const player = document.getElementById('player');
         const fwSound = document.getElementById('fireworks-sound');
@@ -185,8 +183,13 @@
             player.play().catch(e => {});
             currentSongIndex++;
         }
+
         player.onended = playNext;
-        fwSound.onended = () => { playNext(); };
+
+        // FIX: Resume same song when countdown ends
+        fwSound.onended = () => { 
+            player.play().catch(e => {}); 
+        };
 
         function triggerSlip(text, emoji, duration) {
             const slip = document.getElementById('admin-slip');
@@ -203,20 +206,17 @@
             triggerSlip("Look at how far we've come... ❤️", "📸", 5000);
         }
 
-        // NEW MANUAL CLOCK LOGIC
         function startManualClock() {
             const countdownInterval = setInterval(() => {
                 timeLeft--;
 
-                // TRIGGER POPUPS AT SPECIFIC SECONDS
                 if (timeLeft === 110) triggerSlip("I spent so many hours on this for you... 🥺", "💻", 4000);
                 if (timeLeft === 90) triggerSlip("1,360 days and I'm still obsessed with you.", "📈", 4000);
                 if (timeLeft === 70) triggerSlip("Get ready... the best part is coming.", "🎧", 4000);
                 if (timeLeft === 40) triggerSlip("Everything I do, I do for us. ❤️", "🫂", 5000);
 
-                // FINAL 10 SECOND SYNC
                 if (timeLeft === 10 && !specialAudioPlayed) {
-                    player.pause(); 
+                    player.pause(); // Just pause current song
                     fwSound.play().catch(e => {}); 
                     specialAudioPlayed = true;
                     triggerSlip("Listen closely... ❤️", "🎧", 4000);
