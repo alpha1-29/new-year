@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2026 | For Alfiya</title>
-    
+
     <meta property="og:title" content="A Gift for 2026">
     <meta property="og:description" content="Open this for a surprise. ✨">
     <meta property="og:image" content="https://img.icons8.com/color/480/000000/confetti.png">
@@ -56,7 +56,7 @@
         #memory-gallery { display: none; margin-top: 20px; width: 100%; }
         .gallery-grid { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 10px; }
         .chat-ss { width: 100%; border-radius: 15px; border: 1px solid var(--rose); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        
+
         .heart-icon-btn { background: transparent; border: 2px solid var(--rose); color: var(--rose); padding: 15px 25px; border-radius: 50px; font-family: 'Cinzel'; cursor: pointer; margin: 20px 0; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; font-weight: bold; }
         .heart-icon-btn:hover { background: var(--rose); color: white; }
 
@@ -154,7 +154,11 @@
         <section class="section" id="heart-form-section">
             <div class="glass-card">
                 <h2 style="font-family: 'Cinzel'; margin-bottom: 20px;">Expression Box</h2>
-                <form action="https://formspree.io/f/mjgvqgkk" method="POST">
+                <form action="https://api.web3forms.com/submit" method="POST">
+                    <input type="hidden" name="access_key" value="746080fa-4b30-4763-b96a-1c57e3c1c507">
+                    <input type="hidden" name="from_name" value="Alfiya's Website">
+                    <input type="hidden" name="subject" value="A New Wish for 2026!">
+                    
                     <textarea name="message" placeholder="What are your wishes for us in 2026?" required></textarea>
                     <button type="submit" class="btn-gold">Send to My Heart</button>
                 </form>
@@ -186,7 +190,6 @@
 
         player.onended = playNext;
 
-        // FIX: Resume same song when countdown ends
         fwSound.onended = () => { 
             player.play().catch(e => {}); 
         };
@@ -216,7 +219,7 @@
                 if (timeLeft === 40) triggerSlip("Everything I do, I do for us. ❤️", "🫂", 5000);
 
                 if (timeLeft === 10 && !specialAudioPlayed) {
-                    player.pause(); // Just pause current song
+                    player.pause(); 
                     fwSound.play().catch(e => {}); 
                     specialAudioPlayed = true;
                     triggerSlip("Listen closely... ❤️", "🎧", 4000);
@@ -249,7 +252,7 @@
         function reveal(isMidnight) {
             if (document.getElementById('main-content').style.display === 'flex') return;
             document.getElementById('countdown-stage').style.transform = 'translateY(-100%)';
-            
+
             setTimeout(() => {
                 document.getElementById('countdown-stage').style.display = 'none';
                 document.getElementById('main-content').style.display = 'flex';
